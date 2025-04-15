@@ -1,0 +1,95 @@
+version: '3'
+
+services: 
+
+  db:
+    image: postgres:14.1-alpine
+    container_name: db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/log:/var/log/postgresql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment: 
+       POSTGRES_DB: ${POSTGRES_DB}
+       POSTGRES_USER: ${POSTGRES_USER}
+       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+       TZ: UTC
+    ports: 
+      - ${POSTGRES_PORT}:${CONTAINER_POSTGRES_PORT}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks: 
+      - node-network
+
+
+  back-end:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: back-end
+    env_file:
+      - .env
+    networks: 
+      - node-network
+    depends_on:
+       db:
+        condition: service_healthy
+    volumes: 
+      - ./server:/app
+      - /app/node_modules
+    restart: always
+    ports: 
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      POSTGRES_DB_PORT: ${CONTAINER_POSTGRES_PORT}
+      POSTGRES_HOST: "db"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: npm run dev
+
+  front-end:
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: front-end
+    working_dir: /app
+    networks: 
+      - node-network
+    depends_on:
+       - back-end
+    volumes: 
+      - ./client:/app
+      - /app/node_modules
+    ports: 
+      - "5173:5173"
+    command: npm run dev
+
+
+  nginx:
+    build: 
+      context: nginx
+    container_name: nginx
+    restart: always
+    tty: true
+    ports: 
+      - ${APP_PORT_HOST}:80
+    networks: 
+      - node-network
+    depends_on:
+       - back-end
+       - front-end
+  
+networks: 
+  node-network:
+    driver: bridge
+
+volumes:
+    nodemodules: {}
