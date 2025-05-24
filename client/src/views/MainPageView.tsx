@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import HeaderMenu from '../components/common/HeaderMenu';
+import  TasksBoard from '../components/boards/TasksBoard';
 
 
 interface IMainPageViewProps {
@@ -8,22 +9,13 @@ interface IMainPageViewProps {
 const MainPageView: React.FunctionComponent<IMainPageViewProps> = () => {
      return (
           <>
+          <HeaderMenu />
                <div className="container-fluid">
+                    <div className="container">
                     <div className="row">
-                         <div className="col bg-success" >
-
-                              <div className="vh-100 d-flex align-items-center justify-content-center">
-
-                                   <Link to='/boards' className='text-white text-decoration-none'><span className='fs-1 decoration-none'>Boards</span></Link>
-                              </div>
-                         </div>
-                         <div className="col bg-primary-subtle">
-                              <div className="vh-100 d-flex align-items-center justify-content-center">
-
-                                   <Link to='/tasks' className='text-primary-subtle text-decoration-none'><span className='fs-1 decoration-none'>Tasks</span></Link>
-
-                              </div>
-                         </div>
+                         <TasksBoard />
+                    </div>
+                         
                     </div>
                </div>
           </>

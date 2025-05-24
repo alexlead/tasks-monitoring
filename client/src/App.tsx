@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route,  BrowserRouter as Router, Routes } from 'react-router-dom'
-import TasksView from './views/TasksView'
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import TasksView from './views/TasksView';
 import BoardsView from './views/BoardsView';
 import MainPageView from './views/MainPageView';
 
