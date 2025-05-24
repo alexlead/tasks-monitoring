@@ -1,17 +1,17 @@
 import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { TaskItem } from './TaskItem';
 import { Task, TaskStatus } from './TasksBoard';
+import TaskItem from './TaskItem';
 
-interface TasksContainerProps {
+interface ITasksContainerProps {
   id: TaskStatus;
   title: string;
   color: string;
   tasks: Task[];
 }
 
-export const TasksContainer = ({ id, title, color, tasks }: TasksContainerProps) => {
+const TasksContainer: React.FunctionComponent<ITasksContainerProps> = ({ id, title, color, tasks }) => {
   const { setNodeRef } = useDroppable({
     id,
     data: { type: 'container' },
@@ -23,7 +23,7 @@ export const TasksContainer = ({ id, title, color, tasks }: TasksContainerProps)
       className="tasks-container"
       style={{ backgroundColor: color }}
     >
-      <h3 className="container-title">
+      <h3 className="container-title mb-0">
         {title} <span className="task-count">({tasks.length})</span>
       </h3>
       <div className="container-body">
@@ -41,3 +41,5 @@ export const TasksContainer = ({ id, title, color, tasks }: TasksContainerProps)
     </div>
   );
 };
+
+export default TasksContainer;

@@ -1,5 +1,15 @@
 # TASK MONITORING APP
 
+## Description
+A lightweight Task Monitoring Board web application for task management, inspired by the Kanban methodology. This project allows users to create, organize, and track tasks across customizable columns (e.g., To Do, In Progress, Done).
+
+### Key Features:
+✔ Drag-and-drop task movement between columns
+✔ Add/Edit/Delete tasks
+✔ Clean UI with customizable task cards
+
+This project focuses on simplicity and usability. Ideal for personal productivity.
+
 ## Technologies
 - Node.js
 - Express.js
@@ -35,4 +45,5 @@ The port-number you set in `.env` file, please use it for below URL:
 `http://localhost:${port-number}`
 
 
-## Description
+![App screenshot](./screenshot.png)
+

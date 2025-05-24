@@ -12,8 +12,8 @@ import {
   DragOverEvent,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { TasksContainer } from './TasksContainer';
-import { TaskItem } from './TaskItem';
+import  TasksContainer from './TasksContainer';
+import TaskItem  from './TaskItem';
 
 export type TaskStatus = 'todo' | 'progress' | 'review' | 'done';
 
@@ -96,6 +96,10 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
   };
 
   return (
+    <>
+    <div className="task-buttons text-end">
+<button type="button" className="btn btn-light-blue">Add new</button>
+    </div>
     <div className="tasks-board">
       <DndContext
         sensors={sensors}
@@ -127,6 +131,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
         </DragOverlay>
       </DndContext>
     </div>
+    </>
   );
 };
 

@@ -3,12 +3,12 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Task } from './TasksBoard';
 
-interface TaskItemProps {
+interface ITaskItemProps {
   task: Task;
   style?: React.CSSProperties;
 }
 
-export const TaskItem = ({ task, style }: TaskItemProps) => {
+const TaskItem: React.FunctionComponent<ITaskItemProps>  = ({ task, style }) => {
   const {
     attributes,
     listeners,
@@ -44,3 +44,5 @@ export const TaskItem = ({ task, style }: TaskItemProps) => {
     </div>
   );
 };
+
+export default TaskItem;
