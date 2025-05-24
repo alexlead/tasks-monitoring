@@ -15,8 +15,11 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { TasksContainer } from './TasksContainer';
 import { TaskItem } from './TaskItem';
 
-export type TaskStatus = 'backlog' | 'todo' | 'progress' | 'review' | 'done';
+export type TaskStatus = 'todo' | 'progress' | 'review' | 'done';
 
+export interface ITasksBoardProps {
+
+}
 export interface Task {
   id: string;
   title: string;
@@ -25,20 +28,23 @@ export interface Task {
 }
 
 const containerConfig: Record<TaskStatus, { title: string; color: string }> = {
-  backlog: { title: 'Backlog', color: '#e3e3e3' },
   todo: { title: 'To Do', color: '#bee3f8' },
   progress: { title: 'In Progress', color: '#fed7d7' },
   review: { title: 'Review', color: '#feebc8' },
   done: { title: 'Done', color: '#c6f6d5' },
 };
 
-export const TasksBoard = () => {
+const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
   const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', title: 'Design UI mockups', status: 'backlog' },
+    { id: '1', title: 'Design UI mockups', status: 'todo' },
     { id: '2', title: 'Implement auth system', status: 'todo' },
     { id: '3', title: 'Database schema', status: 'progress' },
     { id: '4', title: 'API endpoints', status: 'review' },
-    { id: '5', title: 'Setup CI/CD', status: 'done' },
+    { id: '5', title: 'Setup CI/CD 1', status: 'done' },
+    { id: '6', title: 'Setup CI/CD 2', status: 'done' },
+    { id: '7', title: 'Setup CI/CD 3', status: 'done' },
+    { id: '8', title: 'Setup CI/CD 4', status: 'done' },
+    { id: '9', title: 'Setup CI/CD 5', status: 'done' },
   ]);
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -60,13 +66,13 @@ export const TasksBoard = () => {
     if (!over) return;
 
     const activeId = active.id.toString();
-    const overStatus = over.data.current?.type === 'container' 
-      ? over.id 
+    const overStatus = over.data.current?.type === 'container'
+      ? over.id
       : tasks.find(t => t.id === over.id)?.status;
 
     if (!overStatus) return;
 
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map(task =>
       task.id === activeId ? { ...task, status: overStatus as TaskStatus } : task
     ));
   };
@@ -110,8 +116,8 @@ export const TasksBoard = () => {
 
         <DragOverlay>
           {activeTask && (
-            <TaskItem 
-              task={activeTask} 
+            <TaskItem
+              task={activeTask}
               style={{
                 transform: 'scale(1.05) rotate(2deg)',
                 boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
@@ -123,3 +129,5 @@ export const TasksBoard = () => {
     </div>
   );
 };
+
+export default TasksBoard;

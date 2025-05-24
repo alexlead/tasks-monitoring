@@ -18,7 +18,7 @@ export const TasksContainer = ({ id, title, color, tasks }: TasksContainerProps)
   });
 
   return (
-    <div 
+    <div
       ref={setNodeRef}
       className="tasks-container"
       style={{ backgroundColor: color }}
@@ -26,17 +26,18 @@ export const TasksContainer = ({ id, title, color, tasks }: TasksContainerProps)
       <h3 className="container-title">
         {title} <span className="task-count">({tasks.length})</span>
       </h3>
-      
-      <SortableContext 
-        items={tasks.map(task => task.id)} 
-        strategy={verticalListSortingStrategy}
-      >
-        <div className="tasks-list">
-          {tasks.map(task => (
-            <TaskItem key={task.id} task={task} />
-          ))}
-        </div>
-      </SortableContext>
+      <div className="container-body">
+        <SortableContext
+          items={tasks.map(task => task.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="tasks-list">
+            {tasks.map(task => (
+              <TaskItem key={task.id} task={task} />
+            ))}
+          </div>
+        </SortableContext>
+      </div>
     </div>
   );
 };

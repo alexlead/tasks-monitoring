@@ -34,27 +34,32 @@ $theme-colors: ("primary": $primary,
   gap: 24px;
   padding: 24px;
   overflow-x: auto;
-  height: 40vh;
+  height: 70vh;
+  min-height: 500px;
   background-color: #f8f9fa;
 }
 
 .tasks-container {
   border-radius: 12px;
-  padding: 16px;
+  padding: 0;
   width: 320px;
   display: flex;
-  overflow-x: auto;
   flex-direction: column;
   gap: 12px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
 .container-title {
-  margin: 0 0 12px 0;
+  padding: 16px;
+
   font-size: 1.1rem;
   font-weight: 600;
   color: #2d3748;
 }
+  .container-body {
+  padding: 16px;
+    overflow-x: auto;  
+    }
+}
+
 
 .task-count {
   opacity: 0.6;
