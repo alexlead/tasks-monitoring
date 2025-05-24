@@ -1,21 +1,21 @@
 import React from 'react';
-import { Route,  BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import TasksView from './views/TasksView';
-import BoardsView from './views/BoardsView';
 import MainPageView from './views/MainPageView';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 function App() {
 
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/tasks" element={<TasksView />} />
-          <Route path="/boards" element={<BoardsView />} />
-          <Route path="*" element={<MainPageView />} />
-        </Routes>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <Routes>
+            <Route path="*" element={<MainPageView />} />
+          </Routes>
+        </Router>
+      </Provider>
     </>
   )
 }

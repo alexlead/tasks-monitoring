@@ -2,6 +2,8 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Task } from './TasksBoard';
+import { useDispatch } from 'react-redux';
+import { toggleModal } from '../../store/slices/taskSlice';
 
 interface ITaskItemProps {
   task: Task;
@@ -9,6 +11,8 @@ interface ITaskItemProps {
 }
 
 const TaskItem: React.FunctionComponent<ITaskItemProps>  = ({ task, style }) => {
+
+  const dispatch = useDispatch();
   const {
     attributes,
     listeners,
@@ -25,6 +29,10 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = ({ task, style }) => 
     ...style,
   };
 
+        const showModal = () => {
+            dispatch( toggleModal( {taskId: +task.id, showModal: true} ) )
+        }
+  
   return (
     <div
       ref={setNodeRef}
@@ -32,6 +40,7 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = ({ task, style }) => 
       style={itemStyle}
       {...attributes}
       {...listeners}
+      onDoubleClick={showModal}
     >
       <div className="task-title">{task.title}</div>
       {task.description && (

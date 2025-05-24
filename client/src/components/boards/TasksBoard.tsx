@@ -12,8 +12,11 @@ import {
   DragOverEvent,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import  TasksContainer from './TasksContainer';
-import TaskItem  from './TaskItem';
+import TasksContainer from './TasksContainer';
+import TaskItem from './TaskItem';
+import TaskEditModal from '../tasks/TaskEditModal';
+import { toggleModal } from '../../store/slices/taskSlice';
+import { useDispatch } from 'react-redux';
 
 export type TaskStatus = 'todo' | 'progress' | 'review' | 'done';
 
@@ -47,6 +50,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
     { id: '9', title: 'Setup CI/CD 5', status: 'done' },
   ]);
 
+  const dispatch = useDispatch();
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -95,42 +99,47 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
     setActiveTask(null);
   };
 
+      const showModal = () => {
+          dispatch( toggleModal( {taskId: 0, showModal: true} ) )
+      }
+
   return (
     <>
-    <div className="task-buttons text-end">
-<button type="button" className="btn btn-light-blue">Add new</button>
-    </div>
-    <div className="tasks-board">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        {(Object.keys(containerConfig) as TaskStatus[]).map((status) => (
-          <TasksContainer
-            key={status}
-            id={status}
-            title={containerConfig[status].title}
-            color={containerConfig[status].color}
-            tasks={tasks.filter(task => task.status === status)}
-          />
-        ))}
-
-        <DragOverlay>
-          {activeTask && (
-            <TaskItem
-              task={activeTask}
-              style={{
-                transform: 'scale(1.05) rotate(2deg)',
-                boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
-              }}
+      <div className="task-buttons text-end">
+        <button type="button" className="btn btn-light-blue" onClick={showModal}><i className="bi bi-plus-lg"></i> Add new</button>
+      </div>
+      <div className="tasks-board">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          {(Object.keys(containerConfig) as TaskStatus[]).map((status) => (
+            <TasksContainer
+              key={status}
+              id={status}
+              title={containerConfig[status].title}
+              color={containerConfig[status].color}
+              tasks={tasks.filter(task => task.status === status)}
             />
-          )}
-        </DragOverlay>
-      </DndContext>
-    </div>
+          ))}
+
+          <DragOverlay>
+            {activeTask && (
+              <TaskItem
+                task={activeTask}
+                style={{
+                  transform: 'scale(1.05) rotate(2deg)',
+                  boxShadow: '0 10px 20px rgba(0,0,0,0.2)',
+                }}
+              />
+            )}
+          </DragOverlay>
+        </DndContext>
+      </div>
+      <TaskEditModal />
     </>
   );
 };

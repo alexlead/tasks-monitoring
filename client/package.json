@@ -15,12 +15,15 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@popperjs/core": "^2.11.8",
+    "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
     "bootstrap-icons": "^1.11.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.5.0"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.5.0",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
