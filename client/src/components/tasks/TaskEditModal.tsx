@@ -17,7 +17,7 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
 
     return (
         <>
-            <div className={`modal modal-dialog-centered modal-dialog-scrollable`} tabIndex={-1} data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" style={{ display: taskEdit.showModal ? 'block' : 'none' }} >
+            <div className={`modal modal-dialog-centered modal-dialog-scrollable`} tabIndex={-1} data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" style={{ display: taskEdit.showModal ? 'block' : 'none', height: "100vh", background: "rgba(0, 0, 0, 0.5)" }} >
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">

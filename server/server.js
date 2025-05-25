@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import taskBoardRoutes from './routes/TaskBoardRoutes.js';
+import statusRoutes from './routes/statusRoutes.js';
 
 const app = express();
 const port = 3000 ;
@@ -20,7 +20,7 @@ app.get('/api/', (req, res) => {
     res.status(200).send({ message: 'Connected' });
 }
 )
-app.use("/api/board", taskBoardRoutes);
+app.use("/api/statuses/", statusRoutes);
 
 
 app.listen(port, () => {

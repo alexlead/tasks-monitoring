@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -15,10 +15,11 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import TasksContainer from './TasksContainer';
 import TaskItem from './TaskItem';
 import TaskEditModal from '../tasks/TaskEditModal';
-import { toggleModal } from '../../store/slices/taskSlice';
-import { useDispatch } from 'react-redux';
+import { selectTask, toggleModal, updateStatuses } from '../../store/slices/taskSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllStatuses } from '../../api/statusApi';
 
-export type TaskStatus = 'todo' | 'progress' | 'review' | 'done';
+// export type TaskStatus = 'todo' | 'progress' | 'review' | 'done';
 
 export interface ITasksBoardProps {
 
@@ -27,30 +28,31 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: TaskStatus;
+  status: number;
 }
 
-const containerConfig: Record<TaskStatus, { title: string; color: string }> = {
-  todo: { title: 'To Do', color: '#bee3f8' },
-  progress: { title: 'In Progress', color: '#fed7d7' },
-  review: { title: 'Review', color: '#feebc8' },
-  done: { title: 'Done', color: '#c6f6d5' },
-};
+// const containerConfig: Record<TaskStatus, { title: string; color: string }> = {
+//   todo: { title: 'To Do', color: '#bee3f8' },
+//   progress: { title: 'In Progress', color: '#fed7d7' },
+//   review: { title: 'Review', color: '#feebc8' },
+//   done: { title: 'Done', color: '#c6f6d5' },
+// };
 
 const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
   const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', title: 'Design UI mockups', status: 'todo' },
-    { id: '2', title: 'Implement auth system', status: 'todo' },
-    { id: '3', title: 'Database schema', status: 'progress' },
-    { id: '4', title: 'API endpoints', status: 'review' },
-    { id: '5', title: 'Setup CI/CD 1', status: 'done' },
-    { id: '6', title: 'Setup CI/CD 2', status: 'done' },
-    { id: '7', title: 'Setup CI/CD 3', status: 'done' },
-    { id: '8', title: 'Setup CI/CD 4', status: 'done' },
-    { id: '9', title: 'Setup CI/CD 5', status: 'done' },
+    { id: '1', title: 'Design UI mockups', status: 1 },
+    { id: '2', title: 'Implement auth system', status: 2 },
+    { id: '3', title: 'Database schema', status: 2 },
+    { id: '4', title: 'API endpoints', status: 2 },
+    { id: '5', title: 'Setup CI/CD 1', status: 4 },
+    { id: '6', title: 'Setup CI/CD 2', status: 4 },
+    { id: '7', title: 'Setup CI/CD 3', status: 4 },
+    { id: '8', title: 'Setup CI/CD 4', status: 4 },
+    { id: '9', title: 'Setup CI/CD 5', status: 4 },
   ]);
 
   const dispatch = useDispatch();
+  const {statuses} = useSelector(selectTask);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
@@ -103,11 +105,33 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
           dispatch( toggleModal( {taskId: 0, showModal: true} ) )
       }
 
+      const getStatusContainerList = async () => {
+        try {
+          const res = await getAllStatuses();
+          if( res.status === 200 ) {
+            dispatch( updateStatuses( [ ...res.data.data ]));
+          }
+
+        } catch (error) {
+          
+        }
+      }
+
+      useEffect( ()=> {
+
+        getStatusContainerList();
+
+        return ( () => {
+          dispatch( toggleModal( {taskId: 0, showModal: false} ) )
+        })
+      }, []);
+
   return (
     <>
       <div className="task-buttons text-end">
         <button type="button" className="btn btn-light-blue" onClick={showModal}><i className="bi bi-plus-lg"></i> Add new</button>
       </div>
+
       <div className="tasks-board">
         <DndContext
           sensors={sensors}
@@ -116,13 +140,13 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          {(Object.keys(containerConfig) as TaskStatus[]).map((status) => (
+          { statuses.map((status) => (
             <TasksContainer
-              key={status}
-              id={status}
-              title={containerConfig[status].title}
-              color={containerConfig[status].color}
-              tasks={tasks.filter(task => task.status === status)}
+              key={status.id}
+              id={status.id}
+              title={status.title}
+              color={status.color}
+              tasks={tasks.filter(task => task.status === status.id)}
             />
           ))}
 
@@ -139,6 +163,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
           </DragOverlay>
         </DndContext>
       </div>
+
       <TaskEditModal />
     </>
   );

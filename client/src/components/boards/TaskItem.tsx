@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Task } from './TasksBoard';
@@ -10,7 +10,7 @@ interface ITaskItemProps {
   style?: React.CSSProperties;
 }
 
-const TaskItem: React.FunctionComponent<ITaskItemProps>  = ({ task, style }) => {
+const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style }) => {
 
   const dispatch = useDispatch();
   const {
@@ -52,6 +52,6 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = ({ task, style }) => 
       </div>
     </div>
   );
-};
+} ) ;
 
 export default TaskItem;
