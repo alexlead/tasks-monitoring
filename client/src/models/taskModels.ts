@@ -6,3 +6,9 @@ export type TTaskEditModel = {
 export type TTaskItem = {
     
 }
+
+export type TNewTaskSave = {
+    id?: number;
+    title: string;
+    description: string;
+}

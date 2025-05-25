@@ -18,11 +18,11 @@ class StatusRepository {
     }
 
     static async toggleActivationStatus(id, statusActivity) {
-        const response = await pool.query('UPDATE task_boards (status_delete ) VALUES ($1) WHERE id = $2 RETURNING id;', [statusActivity, id])
+        const response = await pool.query('UPDATE status (status_delete ) VALUES ($1) WHERE id = $2 RETURNING id;', [statusActivity, id])
         return (!response.rows.length) ? null : response.rows[0].id
     }
     static async updateStatus(status) {
-        const response = await pool.query('UPDATE task_boards (title, color, status_delete ) VALUES ($1) WHERE id = $2 RETURNING id;', [status.title, status.color, status.statusDelete, status.id])
+        const response = await pool.query('UPDATE status (title, color, status_delete ) VALUES ($1) WHERE id = $2 RETURNING id;', [status.title, status.color, status.statusDelete, status.id])
         return (!response.rows.length) ? null : response.rows[0].id
     }
 

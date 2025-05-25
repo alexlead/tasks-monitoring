@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import statusRoutes from './routes/statusRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
 
 const app = express();
 const port = 3000 ;
@@ -21,6 +22,7 @@ app.get('/api/', (req, res) => {
 }
 )
 app.use("/api/statuses/", statusRoutes);
+app.use("/api/tasks/", taskRoutes);
 
 
 app.listen(port, () => {
