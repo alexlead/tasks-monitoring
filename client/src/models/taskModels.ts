@@ -11,7 +11,8 @@ export type TNewTaskSave = {
 }
 
 export type TTaskItem = TNewTaskSave & {
+    id: number;
     createdDate?: string;
     statusId: number;
-    statusDelete: boolean;
+    statusDelete?: boolean;
 }

@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Task } from './TasksBoard';
 import { useDispatch } from 'react-redux';
 import { toggleModal } from '../../store/slices/taskSlice';
+import { TTaskItem } from '../../models/taskModels';
 
 interface ITaskItemProps {
-  task: Task;
+  task: TTaskItem;
   style?: React.CSSProperties;
 }
 
@@ -20,7 +20,7 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style 
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task.id });
+  } = useSortable({ id: task.id || 0 });
 
   const itemStyle = {
     transform: CSS.Transform.toString(transform),
@@ -30,7 +30,7 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style 
   };
 
         const showModal = () => {
-            dispatch( toggleModal( {taskId: +task.id, showModal: true} ) )
+            dispatch( toggleModal( { taskId: task.id || 0 , showModal: true} ) )
         }
   
   return (
@@ -40,15 +40,12 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style 
       style={itemStyle}
       {...attributes}
       {...listeners}
-      onDoubleClick={showModal}
+      onClick={showModal}
     >
       <div className="task-title">{task.title}</div>
-      {task.description && (
-        <div className="task-description">{task.description}</div>
-      )}
       <div className="task-footer">
         <span className="task-id">ID: {task.id}</span>
-        <span className="task-status">{task.status}</span>
+        <span className="task-status">{task.createdDate}</span>
       </div>
     </div>
   );

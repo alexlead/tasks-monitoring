@@ -15,45 +15,23 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import TasksContainer from './TasksContainer';
 import TaskItem from './TaskItem';
 import TaskEditModal from '../tasks/TaskEditModal';
-import { selectTask, toggleModal, updateStatuses } from '../../store/slices/taskSlice';
+import { selectTask, toggleModal, updateStatuses, updateTasks } from '../../store/slices/taskSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStatuses } from '../../api/statusApi';
-
-// export type TaskStatus = 'todo' | 'progress' | 'review' | 'done';
+import { getAllTasks } from '../../api/taskApi';
+import { TTaskItem } from '../../models/taskModels';
 
 export interface ITasksBoardProps {
 
 }
-export interface Task {
-  id: string;
-  title: string;
-  description?: string;
-  status: number;
-}
 
-// const containerConfig: Record<TaskStatus, { title: string; color: string }> = {
-//   todo: { title: 'To Do', color: '#bee3f8' },
-//   progress: { title: 'In Progress', color: '#fed7d7' },
-//   review: { title: 'Review', color: '#feebc8' },
-//   done: { title: 'Done', color: '#c6f6d5' },
-// };
+
 
 const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', title: 'Design UI mockups', status: 1 },
-    { id: '2', title: 'Implement auth system', status: 2 },
-    { id: '3', title: 'Database schema', status: 2 },
-    { id: '4', title: 'API endpoints', status: 2 },
-    { id: '5', title: 'Setup CI/CD 1', status: 4 },
-    { id: '6', title: 'Setup CI/CD 2', status: 4 },
-    { id: '7', title: 'Setup CI/CD 3', status: 4 },
-    { id: '8', title: 'Setup CI/CD 4', status: 4 },
-    { id: '9', title: 'Setup CI/CD 5', status: 4 },
-  ]);
 
   const dispatch = useDispatch();
-  const {statuses} = useSelector(selectTask);
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const {statuses, tasks} = useSelector(selectTask);
+  const [activeTask, setActiveTask] = useState<TTaskItem | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -74,28 +52,29 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
     const activeId = active.id.toString();
     const overStatus = over.data.current?.type === 'container'
       ? over.id
-      : tasks.find(t => t.id === over.id)?.status;
+      : tasks.find(t => t.id === over.id)?.statusId;
 
-    if (!overStatus) return;
+    if (!overStatus ) return;
 
-    setTasks(tasks.map(task =>
-      task.id === activeId ? { ...task, status: overStatus as TaskStatus } : task
-    ));
+    dispatch( updateTasks(tasks.map(task =>
+      task.id === +activeId ? { ...task, statusId: overStatus as number } : task
+    )));
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeId = active.id.toString();
-    const overId = over.id.toString();
+    const activeId = active.id;
+    const overId = over.id;
 
     if (activeId !== overId) {
-      setTasks(items => {
-        const activeIndex = items.findIndex(item => item.id === activeId);
-        const overIndex = items.findIndex(item => item.id === overId);
-        return arrayMove(items, activeIndex, overIndex);
-      });
+      const newTaskArray: TTaskItem[] = [ ...(() => {
+        const activeIndex = tasks.findIndex(item => item.id === activeId);
+        const overIndex = tasks.findIndex(item => item.id === overId);
+        return arrayMove(tasks, activeIndex, overIndex);
+      })() ]
+      dispatch( updateTasks( [ ...newTaskArray] ));
     }
 
     setActiveTask(null);
@@ -113,13 +92,25 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
           }
 
         } catch (error) {
-          
+          console.error(error)
+        }
+      }
+
+      const getAllTaskItems = async () => {
+        try {
+          const res = await getAllTasks();
+          if( res.status === 200 ) {
+            dispatch( updateTasks( [ ...res.data.data.map((item:any)=>({id: item.id, title: item.title, description: item.description, createdDate: (new Date(item.created_date)).toLocaleDateString(), statusId: item.status_id })) ]));
+          }
+        } catch (error) {
+          console.error(error)
         }
       }
 
       useEffect( ()=> {
 
         getStatusContainerList();
+        getAllTaskItems();
 
         return ( () => {
           dispatch( toggleModal( {taskId: 0, showModal: false} ) )
@@ -146,7 +137,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
               id={status.id}
               title={status.title}
               color={status.color}
-              tasks={tasks.filter(task => task.status === status.id)}
+              tasks={tasks.filter(task => task.statusId === status.id)}
             />
           ))}
 

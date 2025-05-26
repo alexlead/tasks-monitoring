@@ -1,14 +1,14 @@
 import React, { memo } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Task, TaskStatus } from './TasksBoard';
 import TaskItem from './TaskItem';
+import { TTaskItem } from '../../models/taskModels';
 
 interface ITasksContainerProps {
-  id: TaskStatus;
+  id: number;
   title: string;
   color: string;
-  tasks: Task[];
+  tasks: TTaskItem[];
 }
 
 const TasksContainer: React.FunctionComponent<ITasksContainerProps> = memo ( ({ id, title, color, tasks }) => {
@@ -28,7 +28,7 @@ const TasksContainer: React.FunctionComponent<ITasksContainerProps> = memo ( ({ 
       </h3>
       <div className="container-body">
         <SortableContext
-          items={tasks.map(task => task.id)}
+          items={tasks.map(task => task.id || 0)}
           strategy={verticalListSortingStrategy}
         >
           <div className="tasks-list">
