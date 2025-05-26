@@ -26,6 +26,5 @@ class StatusRepository {
         return (!response.rows.length) ? null : response.rows[0].id
     }
 
-    
 }
 export default StatusRepository

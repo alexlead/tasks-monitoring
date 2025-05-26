@@ -3,12 +3,15 @@ export type TTaskEditModel = {
     showModal: boolean;
 }
 
-export type TTaskItem = {
-    
-}
 
 export type TNewTaskSave = {
     id?: number;
     title: string;
     description: string;
+}
+
+export type TTaskItem = TNewTaskSave & {
+    createdDate?: string;
+    statusId: number;
+    statusDelete: boolean;
 }

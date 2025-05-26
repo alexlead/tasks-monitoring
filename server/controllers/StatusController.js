@@ -1,6 +1,21 @@
 import StatusService from "../services/StatusService.js";
 
+/**
+ * Description placeholder
+ *
+ * @class StatusController
+ * @typedef {StatusController}
+ */
 class StatusController {
+    /**
+     * Get Status list for Dashboard
+     *
+     * @static
+     * @async
+     * @param {*} req 
+     * @param {*} res 
+     * @returns {*} 
+     */
     static async getActiveStatuses (req, res) {
         try {
             const statusList = await StatusService.getAllActiveStatuses();

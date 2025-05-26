@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from '../store';
-import { TTaskEditModel } from "../../models/taskModels";
+import { TTaskEditModel, TTaskItem } from "../../models/taskModels";
 import { TStatusItem } from "../../models/statusModels";
 
 interface ITaskState {
     taskEdit: TTaskEditModel;
-    // tasks: ;
+    tasks: TTaskItem[];
     statuses: TStatusItem[];
 }
 
@@ -15,6 +15,7 @@ const initialState: ITaskState = {
         showModal: false
     },
     statuses: [],
+    tasks: []
 };
 
 const taskSlice = createSlice({
@@ -26,13 +27,16 @@ const taskSlice = createSlice({
         },
         updateStatuses: ( state, action: PayloadAction<TStatusItem[]>) => {
             state.statuses = [ ...action.payload ];
+        },
+        updateTasks: ( state, action: PayloadAction<TTaskItem[]>) => {
+            state.tasks = [ ...action.payload ];
         }
     },
 });
 
 
 export const selectTask = (state: RootState) => state.task;
-export const { toggleModal, updateStatuses } = taskSlice.actions;
+export const { toggleModal, updateStatuses, updateTasks } = taskSlice.actions;
 
 
 export default taskSlice.reducer;

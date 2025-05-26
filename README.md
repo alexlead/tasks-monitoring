@@ -44,6 +44,10 @@ Below is a command for running the app
 The port-number you set in `.env` file, please use it for below URL:
 `http://localhost:${port-number}`
 
+## Project documentation 
+The server is included swagger documentation
+`http://localhost:${server-port-number}/docs`
+
 
 ![App screenshot](./screenshot.png)
 
