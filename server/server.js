@@ -6,7 +6,6 @@ import taskRoutes from './routes/taskRoutes.js';
 import pool from "./config/db.js";
 
 import swaggerUi from 'swagger-ui-express';
-// import swaggerDocument from './swagger-output.json' assert { type: "json" };
 import swaggerDocument from './swagger-output.json' with { type: 'json' };
 
 

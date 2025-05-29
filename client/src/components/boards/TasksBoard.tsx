@@ -18,7 +18,7 @@ import TaskEditModal from '../tasks/TaskEditModal';
 import { selectTask, toggleModal, updateStatuses, updateTasks } from '../../store/slices/taskSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStatuses } from '../../api/statusApi';
-import { getAllTasks } from '../../api/taskApi';
+import { getAllTasks, updTaskStatus } from '../../api/taskApi';
 import { TTaskItem } from '../../models/taskModels';
 
 export interface ITasksBoardProps {
@@ -30,7 +30,7 @@ export interface ITasksBoardProps {
 const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
 
   const dispatch = useDispatch();
-  const {statuses, tasks} = useSelector(selectTask);
+  const { statuses, tasks } = useSelector(selectTask);
   const [activeTask, setActiveTask] = useState<TTaskItem | null>(null);
 
   const sensors = useSensors(
@@ -54,68 +54,85 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
       ? over.id
       : tasks.find(t => t.id === over.id)?.statusId;
 
-    if (!overStatus ) return;
+console.log( over.data.current?.type );
 
-    dispatch( updateTasks(tasks.map(task =>
+    if (!overStatus) return;
+
+    dispatch(updateTasks([...tasks.map(task =>
       task.id === +activeId ? { ...task, statusId: overStatus as number } : task
-    )));
+    )]));
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
 
+
     const activeId = active.id;
-    const overId = over.id;
+    // const overId = over.id;
 
-    if (activeId !== overId) {
-      const newTaskArray: TTaskItem[] = [ ...(() => {
-        const activeIndex = tasks.findIndex(item => item.id === activeId);
-        const overIndex = tasks.findIndex(item => item.id === overId);
-        return arrayMove(tasks, activeIndex, overIndex);
-      })() ]
-      dispatch( updateTasks( [ ...newTaskArray] ));
-    }
-
+    // console.log("event: ", event);
+    // console.log("active: ", active);
+    // console.log("over: ", over);
+    let containerId = (active.data.current?.sortable?.containerId?.replaceAll( "Sortable-", ""));
+    // console.log("containerId: ", containerId);
+  
+    // if (activeId !== overId) {
+      updateTaskStatus(+activeId, containerId);
+    // }
     setActiveTask(null);
   };
 
-      const showModal = () => {
-          dispatch( toggleModal( {taskId: 0, showModal: true} ) )
+  const showModal = () => {
+    dispatch(toggleModal({ taskId: 0, showModal: true }))
+  }
+
+  const updateTaskStatus = async (id: number, statusId: number) => {
+    try {
+      const res = await updTaskStatus(id, statusId);
+      console.log(res);
+      if (res.status === 200) {
+        let item = { ...tasks.filter(item => item.id === id)[0] }
+        item.statusId = +statusId;
+        dispatch(updateTasks([...tasks.filter(item => item.id !== id), item]))
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const getStatusContainerList = async () => {
+    try {
+      const res = await getAllStatuses();
+      if (res.status === 200) {
+        dispatch(updateStatuses([...res.data.data]));
       }
 
-      const getStatusContainerList = async () => {
-        try {
-          const res = await getAllStatuses();
-          if( res.status === 200 ) {
-            dispatch( updateStatuses( [ ...res.data.data ]));
-          }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-        } catch (error) {
-          console.error(error)
-        }
+  const getAllTaskItems = async () => {
+    try {
+      const res = await getAllTasks();
+      if (res.status === 200) {
+        dispatch(updateTasks([...res.data.data.map((item: any) => ({ id: item.id, title: item.title, description: item.description, createdDate: (new Date(item.created_date)).toLocaleDateString(), statusId: item.status_id }))]));
       }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-      const getAllTaskItems = async () => {
-        try {
-          const res = await getAllTasks();
-          if( res.status === 200 ) {
-            dispatch( updateTasks( [ ...res.data.data.map((item:any)=>({id: item.id, title: item.title, description: item.description, createdDate: (new Date(item.created_date)).toLocaleDateString(), statusId: item.status_id })) ]));
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      }
+  useEffect(() => {
 
-      useEffect( ()=> {
+    getStatusContainerList();
+    getAllTaskItems();
 
-        getStatusContainerList();
-        getAllTaskItems();
-
-        return ( () => {
-          dispatch( toggleModal( {taskId: 0, showModal: false} ) )
-        })
-      }, []);
+    return (() => {
+      dispatch(toggleModal({ taskId: 0, showModal: false }))
+    })
+  }, []);
 
   return (
     <>
@@ -131,7 +148,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          { statuses.map((status) => (
+          {statuses.map((status) => (
             <TasksContainer
               key={status.id}
               id={status.id}

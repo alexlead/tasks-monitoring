@@ -18,3 +18,7 @@ export const updTaskStatus = async ( id: number, statusId: number ) => {
     const res = await apiClient.put( `/api/tasks/status/`, { id, statusId });
     return { data: res.data, status: res.status };
 }
+export const deleteTask = async ( id: number ) => {
+    const res = await apiClient.delete( `/api/tasks/${id}`);
+    return { data: res.data, status: res.status };
+}

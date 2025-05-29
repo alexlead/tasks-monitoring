@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTask, toggleModal } from '../../store/slices/taskSlice';
-import { addNewTask, updTask } from '../../api/taskApi';
+import { selectTask, toggleModal, updateTasks } from '../../store/slices/taskSlice';
+import { addNewTask, deleteTask, updTask } from '../../api/taskApi';
 
 
 interface ITaskEditModalProps {
@@ -10,7 +10,7 @@ interface ITaskEditModalProps {
 const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
 
     const dispatch = useDispatch();
-    const { taskEdit } = useSelector(selectTask)
+    const { taskEdit,  tasks } = useSelector(selectTask)
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
@@ -26,21 +26,36 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
         dispatch(toggleModal({ taskId: 0, showModal: false }))
     }
 
+    const deleteCurrentTask = async () => {
+        setButtonDisabled( true );
+        try {
+            const res = await deleteTask( taskEdit.taskId );
+            if (res.status === 200 ) {
+                dispatch( updateTasks([ ...tasks.filter(item=> item.id !== taskEdit.taskId )]))
+            }
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setButtonDisabled( false );
+            hideModal();
+        }  
+    }
+
     const saveNewTask = async () => {
         
         try {
             const res = await addNewTask({ title, description })
             if (res.status === 200) {
-                console.log(res.data)
+                const receivedObj = {...Object.assign({}, res.data.data)} //{ ...res.data.data }
+                  let item = {id: receivedObj.id, title: receivedObj.title, description: receivedObj.description, createdDate: (new Date(receivedObj.createdDate)).toLocaleDateString(), statusId: receivedObj.statusId };
+                dispatch( updateTasks([ ...tasks, item ]))
             }
-
         } catch (error) {
             console.log(error)
         } finally {
             setButtonDisabled( false );
             hideModal();
         }
-
     }
 
     const updateTask = async () => {
@@ -49,7 +64,10 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
 
             const res = await updTask({ id, title, description })
             if (res.status === 200) {
-                console.log(res.data)
+                let item = {...tasks.filter(item=> item.id === taskEdit.taskId )[0]}
+                item.title = title;
+                item.description = description;
+                dispatch( updateTasks([ ...tasks.filter(item=> item.id !== taskEdit.taskId ), item]))
             }
 
         } catch (error) {
@@ -78,6 +96,18 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
             setDescription("");
         });
     },[])
+
+    useEffect( () => {
+        if ( taskEdit.taskId > 0 ) {
+            const currentTask = tasks.filter( task => task.id === taskEdit.taskId )[0];
+            setTitle( currentTask.title);
+            setDescription( currentTask.description);
+        } else {
+            setTitle( "");
+            setDescription( "");
+            
+        }
+    },[ taskEdit ])
     return (
         <>
             <div className={`modal modal-dialog-centered modal-dialog-scrollable`} tabIndex={-1} data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" style={{ display: taskEdit.showModal ? 'block' : 'none', height: "100vh", background: "rgba(0, 0, 0, 0.5)" }} >
@@ -118,7 +148,7 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
                             {
                                 taskEdit.taskId > 0 &&
                                 <div>
-                                    <button type="button" className="btn btn-danger" data-bs-dismiss="modal" disabled={buttonsDisabled}><i className="bi bi-trash"></i> Delete</button>
+                                    <button type="button" className="btn btn-danger" data-bs-dismiss="modal" disabled={buttonsDisabled} onClick={deleteCurrentTask}><i className="bi bi-trash"></i> Delete</button>
                                 </div>
                             }
                         </div>

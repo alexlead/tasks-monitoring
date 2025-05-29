@@ -93,6 +93,7 @@ class TaskController {
      */
     static async deleteTaskByStatus(req, res) {
         const id = req.params.id;
+        console.log("delete: ", id)
         if (id > 0) {
             try {
                 const deletedTaskId = await TaskService.deleteTaskByStatus(id);
