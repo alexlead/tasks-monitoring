@@ -11,7 +11,7 @@ import {
   DragEndEvent,
   DragOverEvent,
 } from '@dnd-kit/core';
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import TasksContainer from './TasksContainer';
 import TaskItem from './TaskItem';
 import TaskEditModal from '../tasks/TaskEditModal';
@@ -54,8 +54,6 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
       ? over.id
       : tasks.find(t => t.id === over.id)?.statusId;
 
-console.log( over.data.current?.type );
-
     if (!overStatus) return;
 
     dispatch(updateTasks([...tasks.map(task =>
@@ -67,19 +65,13 @@ console.log( over.data.current?.type );
     const { active, over } = event;
     if (!over) return;
 
-
+    const overStatus = over.data.current?.type === 'container'
+      ? over.id
+      : tasks.find(t => t.id === over.id)?.statusId;
+    if (!overStatus) return;
     const activeId = active.id;
-    // const overId = over.id;
 
-    // console.log("event: ", event);
-    // console.log("active: ", active);
-    // console.log("over: ", over);
-    let containerId = (active.data.current?.sortable?.containerId?.replaceAll( "Sortable-", ""));
-    // console.log("containerId: ", containerId);
-  
-    // if (activeId !== overId) {
-      updateTaskStatus(+activeId, containerId);
-    // }
+    updateTaskStatus(+activeId, overStatus as string);
     setActiveTask(null);
   };
 
@@ -87,10 +79,9 @@ console.log( over.data.current?.type );
     dispatch(toggleModal({ taskId: 0, showModal: true }))
   }
 
-  const updateTaskStatus = async (id: number, statusId: number) => {
+  const updateTaskStatus = async (id: number, statusId: string) => {
     try {
       const res = await updTaskStatus(id, statusId);
-      console.log(res);
       if (res.status === 200) {
         let item = { ...tasks.filter(item => item.id === id)[0] }
         item.statusId = +statusId;

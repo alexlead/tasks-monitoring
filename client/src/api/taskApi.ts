@@ -14,7 +14,7 @@ export const updTask = async ( data: TNewTaskSave) => {
     const res = await apiClient.put( `/api/tasks/`, { ...data});
     return { data: res.data, status: res.status };
 }
-export const updTaskStatus = async ( id: number, statusId: number ) => {
+export const updTaskStatus = async ( id: number, statusId: string ) => {
     const res = await apiClient.put( `/api/tasks/status/`, { id, statusId });
     return { data: res.data, status: res.status };
 }

@@ -11,10 +11,12 @@ interface ITasksContainerProps {
   tasks: TTaskItem[];
 }
 
-const TasksContainer: React.FunctionComponent<ITasksContainerProps> = memo ( ({ id, title, color, tasks }) => {
+const TasksContainer: React.FunctionComponent<ITasksContainerProps> = memo(({ id, title, color, tasks }) => {
   const { setNodeRef } = useDroppable({
     id,
-    data: { type: 'container' },
+    data: {
+      type: 'container'
+    },
   });
 
   return (
@@ -40,6 +42,6 @@ const TasksContainer: React.FunctionComponent<ITasksContainerProps> = memo ( ({ 
       </div>
     </div>
   );
-} );
+});
 
 export default TasksContainer;
