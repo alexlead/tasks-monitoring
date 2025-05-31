@@ -5,7 +5,7 @@ import TaskItem from './TaskItem';
 import { TTaskItem } from '../../models/taskModels';
 
 interface ITasksContainerProps {
-  id: number;
+  id: string;
   title: string;
   color: string;
   tasks: TTaskItem[];

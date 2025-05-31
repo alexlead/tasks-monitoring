@@ -57,7 +57,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
     if (!overStatus) return;
 
     dispatch(updateTasks([...tasks.map(task =>
-      task.id === +activeId ? { ...task, statusId: overStatus as number } : task
+      task.id === +activeId ? { ...task, statusId: overStatus as string } : task
     )]));
   };
 
@@ -81,10 +81,10 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
 
   const updateTaskStatus = async (id: number, statusId: string) => {
     try {
-      const res = await updTaskStatus(id, statusId);
+      const res = await updTaskStatus(id, statusId.replace("cont", ""));
       if (res.status === 200) {
         let item = { ...tasks.filter(item => item.id === id)[0] }
-        item.statusId = +statusId;
+        item.statusId = statusId;
         dispatch(updateTasks([...tasks.filter(item => item.id !== id), item]))
       }
     } catch (error) {
@@ -96,7 +96,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
     try {
       const res = await getAllStatuses();
       if (res.status === 200) {
-        dispatch(updateStatuses([...res.data.data]));
+        dispatch(updateStatuses([...res.data.data.map((item:any)=> ({...item, id: `cont${item.id}`}))]));
       }
 
     } catch (error) {
@@ -108,7 +108,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
     try {
       const res = await getAllTasks();
       if (res.status === 200) {
-        dispatch(updateTasks([...res.data.data.map((item: any) => ({ id: item.id, title: item.title, description: item.description, createdDate: (new Date(item.created_date)).toLocaleDateString(), statusId: item.status_id }))]));
+        dispatch(updateTasks([...res.data.data.map((item: any) => ({ id: item.id, title: item.title, description: item.description, createdDate: (new Date(item.created_date)).toLocaleDateString(), statusId: `cont${item.status_id}` }))]));
       }
     } catch (error) {
       console.error(error)

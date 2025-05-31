@@ -1,5 +1,5 @@
 export type TStatusItem = {
-    id: number;
+    id: string;
     title: string;
     color: string;
     status_delete?: boolean;

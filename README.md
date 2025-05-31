@@ -13,9 +13,16 @@ This project focuses on simplicity and usability. Ideal for personal productivit
 ## Technologies
 - Node.js
 - Express.js
+- Electron
 - React
 - Typescript
 - PostgreSQL
+
+### Frameworks
+- DND
+- Swagger
+- Redux/Toolkit
+- Bootstrap
 
 ## Installation 
 
@@ -43,6 +50,31 @@ Below is a command for running the app
 ### Work with the app through a Browser 
 The port-number you set in `.env` file, please use it for below URL:
 `http://localhost:${port-number}`
+
+
+### Run Desktop APP
+It is required to run the docker app first.
+- Open folder electron-app
+`cd electron-app`
+- Install npm modules
+`npm install`
+#### Run App by Mode
+- Dev Mode
+```bash
+$ npm run dev
+```
+- Build
+
+```bash
+# For windows
+$ npm run build:win
+
+# For macOS
+$ npm run build:mac
+
+# For Linux
+$ npm run build:linux
+```
 
 ## Project documentation 
 The server is included swagger documentation
