@@ -8,11 +8,29 @@ import pool from "./config/db.js";
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger-output.json' with { type: 'json' };
 
+import cors from 'cors';
 
 
 const app = express();
 const port = 3000;
 
+const corsOptions ={
+    origin:'http://localhost:3000', 
+    credentials:true, 
+    optionSuccessStatus:200
+}
+
+app.use(cors({
+  origin: 'http://localhost:3006', 
+  credentials: true 
+}));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3006');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

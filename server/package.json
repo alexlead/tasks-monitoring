@@ -15,6 +15,7 @@
     "better-sqlite3": "^11.9.1",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-fingerprint": "^1.2.2",
