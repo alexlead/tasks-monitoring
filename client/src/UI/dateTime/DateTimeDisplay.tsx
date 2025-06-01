@@ -7,7 +7,7 @@ interface IDateTimeDisplayProps {
 const DateTimeDisplay: React.FunctionComponent<IDateTimeDisplayProps> = () => {
 
 
-    const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
+  const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
 
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -36,10 +36,10 @@ const DateTimeDisplay: React.FunctionComponent<IDateTimeDisplayProps> = () => {
   };
 
 
-return(
-     <>
-     {formatDate(currentDateTime)} {formatTime(currentDateTime)} 
-     </>
-);
+  return (
+    <>
+      {formatDate(currentDateTime)} {formatTime(currentDateTime)}
+    </>
+  );
 }
 export default DateTimeDisplay;

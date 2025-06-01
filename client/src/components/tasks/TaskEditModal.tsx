@@ -10,11 +10,11 @@ interface ITaskEditModalProps {
 const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
 
     const dispatch = useDispatch();
-    const { taskEdit,  tasks } = useSelector(selectTask)
+    const { taskEdit, tasks } = useSelector(selectTask)
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
-    const [ buttonsDisabled, setButtonDisabled ] = useState<boolean>(false);
+    const [buttonsDisabled, setButtonDisabled] = useState<boolean>(false);
 
     const changeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value)
@@ -27,53 +27,53 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
     }
 
     const deleteCurrentTask = async () => {
-        setButtonDisabled( true );
+        setButtonDisabled(true);
         try {
-            const res = await deleteTask( taskEdit.taskId );
-            if (res.status === 200 ) {
-                dispatch( updateTasks([ ...tasks.filter(item=> item.id !== taskEdit.taskId )]))
+            const res = await deleteTask(taskEdit.taskId);
+            if (res.status === 200) {
+                dispatch(updateTasks([...tasks.filter(item => item.id !== taskEdit.taskId)]))
             }
         } catch (error) {
             console.log(error)
         } finally {
-            setButtonDisabled( false );
+            setButtonDisabled(false);
             hideModal();
-        }  
+        }
     }
 
     const saveNewTask = async () => {
-        
+
         try {
             const res = await addNewTask({ title, description })
             if (res.status === 200) {
-                const receivedObj = {...Object.assign({}, res.data.data)} //{ ...res.data.data }
-                  let item = {id: receivedObj.id, title: receivedObj.title, description: receivedObj.description, createdDate: (new Date(receivedObj.createdDate)).toLocaleDateString(), statusId: receivedObj.statusId };
-                dispatch( updateTasks([ ...tasks, item ]))
+                const receivedObj = { ...res.data.data }
+                let item = { id: receivedObj.id, title: receivedObj.title, description: receivedObj.description, createdDate: (new Date(receivedObj.createdDate)).toLocaleDateString(), statusId: `cont${receivedObj.statusId}` };
+                dispatch(updateTasks([...tasks, item]))
             }
         } catch (error) {
             console.log(error)
         } finally {
-            setButtonDisabled( false );
+            setButtonDisabled(false);
             hideModal();
         }
     }
 
     const updateTask = async () => {
-        const id  = taskEdit.taskId;
+        const id = taskEdit.taskId;
         try {
 
             const res = await updTask({ id, title, description })
             if (res.status === 200) {
-                let item = {...tasks.filter(item=> item.id === taskEdit.taskId )[0]}
+                let item = { ...tasks.filter(item => item.id === taskEdit.taskId)[0] }
                 item.title = title;
                 item.description = description;
-                dispatch( updateTasks([ ...tasks.filter(item=> item.id !== taskEdit.taskId ), item]))
+                dispatch(updateTasks([...tasks.filter(item => item.id !== taskEdit.taskId), item]))
             }
 
         } catch (error) {
             console.log(error)
         } finally {
-            setButtonDisabled( false );
+            setButtonDisabled(false);
             hideModal();
         }
 
@@ -81,33 +81,33 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
 
     const saveForm = () => {
 
-        setButtonDisabled( true );
-        
+        setButtonDisabled(true);
+
         if (taskEdit.taskId > 0) {
             updateTask();
         } else {
             saveNewTask();
         }
     }
-    useEffect( () => {
+    useEffect(() => {
 
-        return ( () => {
+        return (() => {
             setTitle("");
             setDescription("");
         });
-    },[])
+    }, [])
 
-    useEffect( () => {
-        if ( taskEdit.taskId > 0 ) {
-            const currentTask = tasks.filter( task => task.id === taskEdit.taskId )[0];
-            setTitle( currentTask.title);
-            setDescription( currentTask.description);
+    useEffect(() => {
+        if (taskEdit.taskId > 0) {
+            const currentTask = tasks.filter(task => task.id === taskEdit.taskId)[0];
+            setTitle(currentTask.title);
+            setDescription(currentTask.description);
         } else {
-            setTitle( "");
-            setDescription( "");
-            
+            setTitle("");
+            setDescription("");
+
         }
-    },[ taskEdit ])
+    }, [taskEdit])
     return (
         <>
             <div className={`modal modal-dialog-centered modal-dialog-scrollable`} tabIndex={-1} data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true" style={{ display: taskEdit.showModal ? 'block' : 'none', height: "100vh", background: "rgba(0, 0, 0, 0.5)" }} >

@@ -10,7 +10,7 @@ interface ITaskItemProps {
   style?: React.CSSProperties;
 }
 
-const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style }) => {
+const TaskItem: React.FunctionComponent<ITaskItemProps> = memo(({ task, style }) => {
 
   const dispatch = useDispatch();
   const {
@@ -20,7 +20,7 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style 
     transform,
     transition,
     isDragging
-    
+
   } = useSortable({ id: task.id || 0 });
 
   const itemStyle = {
@@ -30,10 +30,10 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style 
     ...style
   };
 
-        const showModal = () => {
-            dispatch( toggleModal( { taskId: task.id || 0 , showModal: true} ) )
-        }
-  
+  const showModal = () => {
+    dispatch(toggleModal({ taskId: task.id || 0, showModal: true }))
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -50,6 +50,6 @@ const TaskItem: React.FunctionComponent<ITaskItemProps>  = memo (({ task, style 
       </div>
     </div>
   );
-} ) ;
+});
 
 export default TaskItem;

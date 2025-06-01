@@ -22,14 +22,14 @@ const taskSlice = createSlice({
     name: 'task',
     initialState,
     reducers: {
-        toggleModal: ( state, action: PayloadAction<TTaskEditModel> ) => {
+        toggleModal: (state, action: PayloadAction<TTaskEditModel>) => {
             state.taskEdit = action.payload;
         },
-        updateStatuses: ( state, action: PayloadAction<TStatusItem[]>) => {
-            state.statuses = [ ...action.payload ];
+        updateStatuses: (state, action: PayloadAction<TStatusItem[]>) => {
+            state.statuses = [...action.payload];
         },
-        updateTasks: ( state, action: PayloadAction<TTaskItem[]>) => {
-            state.tasks = [ ...action.payload ];
+        updateTasks: (state, action: PayloadAction<TTaskItem[]>) => {
+            state.tasks = [...action.payload];
         }
     },
 });

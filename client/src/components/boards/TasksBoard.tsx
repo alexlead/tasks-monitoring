@@ -96,7 +96,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
     try {
       const res = await getAllStatuses();
       if (res.status === 200) {
-        dispatch(updateStatuses([...res.data.data.map((item:any)=> ({...item, id: `cont${item.id}`}))]));
+        dispatch(updateStatuses([...res.data.data.map((item: any) => ({ ...item, id: `cont${item.id}` }))]));
       }
 
     } catch (error) {
@@ -139,7 +139,7 @@ const TasksBoard: React.FunctionComponent<ITasksBoardProps> = () => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          
+
           {statuses.map((status) => (
             <TasksContainer
               key={`cont-${status.id}`}

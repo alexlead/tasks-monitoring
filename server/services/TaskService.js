@@ -55,7 +55,7 @@ class TaskService {
             return error;
         }
     }
-    static async deleteTaskByStatus (id ) {
+    static async deleteTaskByStatus(id) {
 
         try {
             const taskId = await TaskRepository.toggleTaskActivationStatus(id, true);
@@ -66,6 +66,6 @@ class TaskService {
         }
     }
 
-    
+
 }
 export default TaskService
