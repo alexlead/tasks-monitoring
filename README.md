@@ -83,9 +83,22 @@ The server is included swagger documentation
 ## Integrated tests
 ### Frontend
 - Open frontend folder
-`cd client`
+```
+cd ./client
+```
 - Run tests
-`npm run test`
+```
+npm run test
+```
+### Backend
+- Open frontend folder
+```
+cd ./server
+```
+- Run tests
+```
+npm run test
+```
 
 
 ![App screenshot](./screenshot.png)
