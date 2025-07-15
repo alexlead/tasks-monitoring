@@ -132,12 +132,12 @@ const TaskEditModal: React.FunctionComponent<ITaskEditModalProps> = () => {
                             }
 
                             <div className="form-floating mb-3">
-                                <input type="text" className="form-control" placeholder="" value={title} onChange={changeTitle} />
-                                <label className="form-label">Title</label>
+                                <input type="text" className="form-control" placeholder="" value={title} onChange={changeTitle} id="task-title"/>
+                                <label className="form-label" htmlFor="task-title">Title</label>
                             </div>
                             <div className="form-floating mb-3">
-                                <textarea className="form-control" rows={5} style={{ height: "150px", resize: "none" }} value={description} onChange={changeDescription} />
-                                <label className="form-label">Description</label>
+                                <textarea className="form-control" rows={5} style={{ height: "150px", resize: "none" }} value={description} onChange={changeDescription} id="task-description" />
+                                <label className="form-label" htmlFor="task-description">Description</label>
                             </div>
                         </div>
                         <div className="modal-footer justify-content-between">

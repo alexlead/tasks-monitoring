@@ -80,6 +80,13 @@ $ npm run build:linux
 The server is included swagger documentation
 `http://localhost:${server-port-number}/docs`
 
+## Integrated tests
+### Frontend
+- Open frontend folder
+`cd client`
+- Run tests
+`npm run test`
+
 
 ![App screenshot](./screenshot.png)
 
