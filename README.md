@@ -91,7 +91,7 @@ cd ./client
 npm run test
 ```
 ### Backend
-- Open frontend folder
+- Open server folder
 ```
 cd ./server
 ```
